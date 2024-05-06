@@ -1,0 +1,25 @@
+class Endpoint:
+    PHONE_TABLETS = "phones-tablets"
+    ELECTRONICS = "electronics"
+    APPLIANCES = "home-office-appliances"
+    HEALTH_BEAUTY = "health-beauty"
+    HOME_OFFICE = "home-office"
+    FASHION = "category-fashion-by-jumia"
+    COMPUTING = "computing"
+    SUPERMARKET = "groceries"
+    BABY_PRODUCTS = "baby-products"
+    SPORTING_GOODS = "sporting-goods"
+    AUTOMOBILE = "automobile"
+    GAMING = "video-games"
+    GARDEN_OUTDOOR = "patio-lawn-garden"
+    BOOKS_MOVIE_MUSIC = "books-movies-music"
+    LIVESTOCK = "livestock"
+    INDUSTRIAL_SCIENTIFIC = "industrial-scientific"
+    MISCELLANEOUS = "miscellaneous"
+    MUSICAL_INSTRUMENTS = "musical-instruments"
+    PET_SUPPLIES = "pet-supplies"
+    SERVICES = "services"
+    TOYS_GAMES = "toys-games"
+
+
+
