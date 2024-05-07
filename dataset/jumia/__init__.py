@@ -884,17 +884,10 @@ class GetDataFromJumia:
 
 
 run = GetDataFromJumia()
-run.get_supermarket()
-run.get_baby_products()
-run.get_sporting_goods()
 run.get_automobile()
 run.get_gaming()
 run.get_garden_outdoor()
 run.get_books_movie_music()
 run.get_livestock()
-run.get_industrial_scientific()
-run.get_miscellaneous()
-run.get_musical_instruments()
-run.get_pet_supplies()
-run.get_services()
+
 
