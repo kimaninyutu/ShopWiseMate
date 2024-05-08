@@ -1,4 +1,4 @@
-import category_locators
+import category_links
 
 
 class Parser:
