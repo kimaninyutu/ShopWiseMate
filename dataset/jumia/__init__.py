@@ -2,10 +2,13 @@ import re
 import requests
 import os
 from bs4 import BeautifulSoup
+from pymongo.server_api import ServerApi
+
 from categories_endpoints import Endpoint as EP, Endpoint
 from products_locator import ProductsLocator as Locator
 from products_information_locator import ProductsInformationLocator as PI
 from n_pages import Number_of_pages
+from pymongo import MongoClient
 
 #pages_endpoint = f"?page={1}#catalog-listing"
 MAIN_URL = f"https://www.jumia.co.ke/"
@@ -13,6 +16,13 @@ MAIN_URL = f"https://www.jumia.co.ke/"
 #soup = BeautifulSoup(JUMIA_PAGE, "html.parser")
 
 products_info = []  # Initialize an empty list to store product info
+uri = ("mongodb+srv://kimanihezekiah:Kimani_4802@cluster0.w7vjsqj.mongodb.net/?retryWrites=true&w=majority&appName"
+       "=Cluster0")
+
+# Create a new client and connect to the server
+connection = MongoClient(uri, server_api=ServerApi('1'))
+collection = connection["Jumia"]
+db = collection
 
 
 class GetDataFromJumia:
@@ -25,9 +35,7 @@ class GetDataFromJumia:
 
     @staticmethod
     def get_phone_tablets():
-        os.makedirs("images", exist_ok=True)  # Ensure "images" folder exists
-
-        for i in range(1, Number_of_pages + 1):
+        for i in range(1, Number_of_pages+1):
             pages_endpoint = f"?page={i}#catalog-listing"
             Page_url = f"{MAIN_URL}{EP.PHONE_TABLETS}{pages_endpoint}"
             Content = requests.get(Page_url).content
@@ -42,29 +50,40 @@ class GetDataFromJumia:
                 product_name = name.text.strip()  # Remove leading/trailing whitespaces
                 product_name_cleaned = GetDataFromJumia.clean_filename(product_name)  # Clean the product name
                 image_url = image.get('data-src').split('?')[0]
-                img_filename = f"{product_name_cleaned}.jpg"  # Construct the image filename
-                category_folder = "phoneTablets"  # Set the category folder name
-                category_folder_path = os.path.join("images", category_folder)  # Construct the category folder path
+                category = "phoneTablets"
+                product_link = f"{MAIN_URL}{link['href']}"
                 try:
-                    os.makedirs(category_folder_path, exist_ok=True)  # Ensure the category folder exists
-                    img_path = os.path.join(category_folder_path, img_filename)  # Construct the image path
-                    with open(img_path, "wb") as file:
-                        img_req = requests.get(image_url)
-                        file.write(img_req.content)
-                    # Append product info to products_info list
-                    products_info.append({
+                    images_urls = [image_url]
+                    product_descriptions = []
+                    print(f"Scrapping {product_name} from jumia")
+                    products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
+                    product_data = products_soup.select(
+                        "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
+                        "div[class*='markup -mhm -pvl -oxa -sc'] img")
+
+                    for data in product_data:
+                        if data.name == "img":
+                            images_urls.append(data['data-src'])
+                        else:
+                            product_descriptions.append(data.text)
+
+                    product_data = {
                         "name": product_name,
-                        "product_link": f"{MAIN_URL}{link['href']}",
+                        "product_link": product_link,
                         "price": price.text.strip(),
                         "rating": rating.text.strip(),
-                        "image": img_path
-                    })
+                        "images_link": images_urls,
+                        "product_descriptions": product_descriptions
+                    }
+                    db[category].insert_one(product_data)  # Insert product data into MongoDB
+                    products_info.append(product_data)
+                    print(f"Scrapped {product_name} from jumia")
                 except Exception as e:
                     print(f"Error occurred while downloading image: {e}")
 
         # Print the collected product info outside of the loop
-        #for product_info in products_info:
-        #print(product_info)
+        for product_info in products_info:
+            print(product_info)
 
     @staticmethod
     def get_electronics():
@@ -884,10 +903,4 @@ class GetDataFromJumia:
 
 
 run = GetDataFromJumia()
-run.get_automobile()
-run.get_gaming()
-run.get_garden_outdoor()
-run.get_books_movie_music()
-run.get_livestock()
-
-
+run.get_phone_tablets()
