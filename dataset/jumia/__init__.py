@@ -1,9 +1,10 @@
 import re
+import time
+
 import requests
-import os
+
 from bs4 import BeautifulSoup
 from pymongo.server_api import ServerApi
-
 from categories_endpoints import Endpoint as EP, Endpoint
 from products_locator import ProductsLocator as Locator
 from products_information_locator import ProductsInformationLocator as PI
@@ -35,7 +36,7 @@ class GetDataFromJumia:
 
     @staticmethod
     def get_phone_tablets():
-        for i in range(1, Number_of_pages+1):
+        for i in range(1, Number_of_pages + 1):
             pages_endpoint = f"?page={i}#catalog-listing"
             Page_url = f"{MAIN_URL}{EP.PHONE_TABLETS}{pages_endpoint}"
             Content = requests.get(Page_url).content
@@ -56,14 +57,23 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+                    time.sleep(5)
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
+
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
-                        "div[class*='markup -mhm -pvl -oxa -sc'] img")
+                        "div[class*='markup -mhm -pvl -oxa -sc'] img, div[class*='markup -mhm -pvl -oxa -sc'] p, "
+                        "div[class*='markup -mhm -pvl -oxa -sc']")
 
                     for data in product_data:
                         if data.name == "img":
-                            images_urls.append(data['data-src'])
+                            image_source = data.get('data-src') or data.get('src')
+                            if image_source:
+                                images_urls.append(image_source)
+
+                        elif data.name == "a":
+                            images_urls.append(data.get('href'))
+
                         else:
                             product_descriptions.append(data.text)
 
@@ -72,7 +82,8 @@ class GetDataFromJumia:
                         "product_link": product_link,
                         "price": price.text.strip(),
                         "rating": rating.text.strip(),
-                        "images_link": images_urls,
+                        "image": image_url,
+                        "other_images": images_urls,
                         "product_descriptions": product_descriptions
                     }
                     db[category].insert_one(product_data)  # Insert product data into MongoDB
@@ -80,7 +91,6 @@ class GetDataFromJumia:
                     print(f"Scrapped {product_name} from jumia")
                 except Exception as e:
                     print(f"Error occurred while downloading image: {e}")
-
 
     @staticmethod
     def get_electronics():
@@ -105,6 +115,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -112,7 +123,13 @@ class GetDataFromJumia:
 
                     for data in product_data:
                         if data.name == "img":
-                            images_urls.append(data['data-src'])
+                            image_source = data.get('data-src') or data.get('src')
+                            if image_source:
+                                images_urls.append(image_source)
+
+                        elif data.name == "a":
+                            images_urls.append(data.get('href'))
+
                         else:
                             product_descriptions.append(data.text)
 
@@ -153,6 +170,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -201,6 +219,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -249,6 +268,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -297,6 +317,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -345,6 +366,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -393,6 +415,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -441,6 +464,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -489,6 +513,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -537,6 +562,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -585,6 +611,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -633,6 +660,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -681,6 +709,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -705,6 +734,7 @@ class GetDataFromJumia:
                     print(f"Scrapped {product_name} from jumia")
                 except Exception as e:
                     print(f"Error occurred while downloading image: {e}")
+
     @staticmethod
     def get_industrial_scientific():
         for i in range(1, Number_of_pages + 1):
@@ -728,6 +758,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -776,6 +807,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -824,6 +856,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -872,6 +905,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -920,6 +954,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -968,6 +1003,7 @@ class GetDataFromJumia:
                     images_urls = [image_url]
                     product_descriptions = []
                     print(f"Scrapping {product_name} from jumia")
+
                     products_soup = BeautifulSoup(requests.get(product_link).content, "html.parser")
                     product_data = products_soup.select(
                         "div[class*='markup -mhm -pvl -oxa -sc'] li, div[class*='markup -mhm -pvl -oxa -sc'] ul,"
@@ -996,3 +1032,22 @@ class GetDataFromJumia:
 
 run = GetDataFromJumia()
 run.get_phone_tablets()
+#run.get_electronics()
+#run.get_appliances()
+#run.get_health_beauty()
+#run.get_fashion()
+#run.get_computing()
+#run.get_supermarket()
+#run.get_baby_products()
+#run.get_sporting_goods()
+#run.get_automobile()
+#run.get_gaming()
+#run.get_garden_outdoor()
+#run.get_books_movie_music()
+#run.get_livestock()
+#run.get_industrial_scientific()
+#run.get_miscellaneous()
+#run.get_musical_instruments()
+#run.get_pet_supplies()
+#run.get_services()
+#run.get_toys_games()
