@@ -1,0 +1,18 @@
+/* Style for the navbar logo */
+.navbar-logo {
+    height: 10px; /* Adjust this value for the smaller logo */
+}
+
+/* Style for the centered logo */
+.center-logo {
+    height: 10px; /* Adjust this value for the larger logo */
+}
+
+/* Ensure the navbar items are centered vertically */
+.navbar {
+    align-items: center;
+}
+
+.lead{
+    align-items: center;
+}
