@@ -1,11 +1,10 @@
-/* Style for the navbar logo */
 .navbar-logo {
-    height: 10px; /* Adjust this value for the smaller logo */
+    height: 100px; /* Adjust this value for the smaller logo */
 }
 
 /* Style for the centered logo */
 .center-logo {
-    height: 10px; /* Adjust this value for the larger logo */
+    height: 100%; /* Adjust this value for the larger logo */
 }
 
 /* Ensure the navbar items are centered vertically */
@@ -13,6 +12,26 @@
     align-items: center;
 }
 
-.lead{
-    align-items: center;
+form {
+  border: 1px solid grey;
+  border-radius: 100px;
+  padding: 8px 10px;
+  display: flex;
+  gap: 5px;
+  width: 500px;
+  margin: 0 auto;
 }
+
+button {
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  cursor: pointer;
+}
+
+input {
+  border: none;
+  outline: none;
+  width: 100%;
+}
+

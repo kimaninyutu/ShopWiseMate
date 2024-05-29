@@ -15,12 +15,13 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import dns.immutable
 import dns.rdtypes.dsbase
+import dns.immutable
 
 
 @dns.immutable.immutable
 class CDS(dns.rdtypes.dsbase.DSBase):
+
     """CDS record"""
 
     _digest_length_by_type = {

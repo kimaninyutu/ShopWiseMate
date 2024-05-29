@@ -1,4 +1,4 @@
-#!/home/fs0ci3ty/Desktop/ShopWiseMate/.venv/bin/python3
+#!/home/fs0ci3ty/Desktop/ShopWiseMate/.venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

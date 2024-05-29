@@ -2,10 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ShopWiseMate{% endblock %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 <body>
-    <img src="https://image.kilimall.com/kenya/shop/store/goods/5971/2021/10/1633439147595a77edcd05e3d45419dec6691e99bc92c_360.jpg.webp#?x-image-process=image/format,webp" alt="Image">
-
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Categories
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/phones-tablets">Phones & Tablets</a>
+                        <a class="dropdown-item" href="/electronics">Electronics</a>
+                        <a class="dropdown-item" href="/home-office-appliances">Home & Office Appliances</a>
+                        <a class="dropdown-item" href="/health-beauty">Health & Beauty</a>
+                        <a class="dropdown-item" href="/home-office">Home Office</a>
+                        <a class="dropdown-item" href="/fashion">Fashion</a>
+                        <a class="dropdown-item" href="/computing">Computing</a>
+                        <a class="dropdown-item" href="/supermarket">Supermarket</a>
+                        <a class="dropdown-item" href="/baby-products">Baby Products</a>
+                        <a class="dropdown-item" href="/sporting-goods">Sporting Goods</a>
+                        <a class="dropdown-item" href="/automobile">Automobile</a>
+                        <a class="dropdown-item" href="/video-games">Video Games</a>
+                        <a class="dropdown-item" href="/patio-lawn-garden">Patio, Lawn & Garden</a>
+                        <a class="dropdown-item" href="/books-movies-music">Books, Movies & Music</a>
+                        <a class="dropdown-item" href="/livestock">Livestock</a>
+                        <a class="dropdown-item" href="/industrial-scientific">Industrial & Scientific</a>
+                        <a class="dropdown-item" href="/miscellaneous">Miscellaneous</a>
+                        <a class="dropdown-item" href="/musical-instruments">Musical Instruments</a>
+                        <a class="dropdown-item" href="/pet-supplies">Pet Supplies</a>
+                        <a class="dropdown-item" href="/services">Services</a>
+                        <a class="dropdown-item" href="/toys-games">Toys & Games</a>
+                    </div>
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/blogs">Blogs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/signup">Signup</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <div class="text-center mb-4">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="ShopWiseMate Logo" class="center-logo">
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

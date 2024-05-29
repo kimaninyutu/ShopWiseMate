@@ -15,12 +15,13 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import dns.immutable
 import dns.rdtypes.txtbase
+import dns.immutable
 
 
 @dns.immutable.immutable
 class NINFO(dns.rdtypes.txtbase.TXTBase):
+
     """NINFO record"""
 
     # see: draft-reid-dnsext-zs-01

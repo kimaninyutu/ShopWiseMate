@@ -15,10 +15,11 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import dns.immutable
 import dns.rdtypes.mxbase
+import dns.immutable
 
 
 @dns.immutable.immutable
 class RT(dns.rdtypes.mxbase.UncompressedDowncasingMX):
+
     """RT record"""
