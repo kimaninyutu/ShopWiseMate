@@ -1,56 +1,70 @@
 import category_links
-from selenium.webdriver.chrome import webdriver
+from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
+import time
 
-
-#driver = webdriver.Firefox()
-
-
-uri = ("mongodb+srv://kimanihezekiah:Kimani_4802@cluster0.w7vjsqj.mongodb.net/?retryWrites=true&w=majority&appName"
-       "=Cluster0")
+# Define MongoDB connection URI
+uri = ("mongodb+srv://username:password@cluster0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 # Create a new client and connect to the server
 connection = MongoClient(uri, server_api=ServerApi('1'))
-collection = connection["Kilimall"]
-db = collection
-
+db = connection["Kilimall"]
 
 # Function to scrape product information on the current page
 class EachProduct:
 
-    @staticmethod
-    def specific_product_info():
-        product_description = driver.find_element(By.CLASS_NAME, "detail-card")
-        product_images = driver.find_elements(By.CLASS_NAME, "thumbnails")
-        for description, image in product_description, product_images:
-            images = image.find_elements(By.CLASS_NAME, "img-item").get_attribute("data-src")
+    def __init__(self, driver):
+        self.driver = driver
 
-            other_images = description.find_elements(By.CSS_SELECTOR, "img").get_attribute("data-src")
-            description = description.find_elements(By.CSS_SELECTOR, "div").get_attribute("p")
-            specification = description.find_elements(By.CLASS_NAME, "specification-card").text
+    def specific_product_info(self, product_url):
+        self.driver.get(product_url)
+        time.sleep(3)  # Adjust sleep time as necessary
+        product_data = {}
+
+        try:
+            product_description = self.driver.find_element(By.CLASS_NAME, "detail-card").text
+            product_images = self.driver.find_elements(By.CLASS_NAME, "img-item")
+            images = [image.get_attribute("data-src") for image in product_images]
+
+            old_price = self.driver.find_element(By.CLASS_NAME, "old-price").text
+            new_price = self.driver.find_element(By.CLASS_NAME, "new-price").text
+            product_name = self.driver.find_element(By.CLASS_NAME, "product-title").text
+            specifications = self.driver.find_element(By.CLASS_NAME, "specification-card").text
 
             product_data = {
-                "Description": description,
+                "Name": product_name,
+                "Description": product_description,
                 "Images": images,
-                "OtherImages": other_images,
-                "Specification": specification
+                "Old Price": old_price,
+                "New Price": new_price,
+                "Specifications": specifications
             }
+        except Exception as e:
+            print(f"Error extracting product details: {e}")
 
         return product_data
 
-    @staticmethod
-    def get_category():
-        for categoryname, categorylink in category_links.__dict__.items():
-            database_categories = db[categoryname]
-            #data = {"categoryname": categoryname}
-            print(database_categories)
-            print(db )
+    def get_category(self):
+        for category_name, category_link in category_links.__dict__.items():
+            if not category_name.startswith('__'):
+                database_category = db[category_name]
+                print(f"Scraping category: {category_name}")
 
+                self.driver.get(category_link)
+                time.sleep(5)  # Adjust sleep time as necessary
+                product_links = self.driver.find_elements(By.CSS_SELECTOR, "a.product-link")
 
-ST = EachProduct()
-ST.get_category()
+                for product_link in product_links:
+                    product_url = product_link.get_attribute('href')
+                    product_data = self.specific_product_info(product_url)
+                    database_category.insert_one(product_data)
+                    print(f"Inserted product: {product_data['Name']}")
 
+# Main execution
+if __name__ == "__main__":
+    driver = webdriver.Chrome()
+    scraper = EachProduct(driver)
+    scraper.get_category()
+    driver.quit()

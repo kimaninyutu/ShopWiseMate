@@ -57,6 +57,7 @@ def click_next_button():
     except Exception as e:
         print(f"Error while clicking next button: {e}")
 
+
 for category_name, category_link in category_links.__dict__.items():
     if not category_name.startswith("__"):  # Skip any private attributes
         driver.get(category_link)
