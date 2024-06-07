@@ -1,115 +1,620 @@
-{% extends "base.html" %}
-
-{% block title %}Home{% endblock %}
-
-{% block content %}
-<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<style>
+  .js-parallax {
+  }
+</style>
+<link
+  href="{{ url_for('static', filename='css/style.css') }}"
+  rel="stylesheet"
+/>
 <div class="Advert">
-    <form>
-      <button>🔍</button>
-        <label>
-            <input placeholder="Explore our products"/>
-        </label>
-    </form>
+  <form>
+    <button>🔍</button>
+    <label>
+      <input placeholder="Explore our products" />
+    </label>
+  </form>
 
-    <div class="center"><a href="/jumia">Shop Online Jumia Stores</a> <a style="border-left: 1px solid #000000;" href="/kilimall">Shop Online Kilimall Store</a></div>
+  <div class="center">
+    <a href="/jumia">Shop Online Jumia Stores</a>
+    <a style="border-left: 1px solid #000000" href="/kilimall"
+      >&nbsp;Shop Online Kilimall Store</a
+    >
+  </div>
 </div>
-<div class="slider__slides"><div class="slide" id="marriott">
-        <a href="https://price.com/coupons/marriott" aria-label="Marriott Coupons and Cash Back" class="slide__link"></a>
-        <div class="slide__image">
-            <img width="87" height="87" data-src="https://d229ghlvos009z.cloudfront.net/favicon/marriott-bonvoy-icon-030524.png" alt="marriott" class=" lazyloaded" src="https://d229ghlvos009z.cloudfront.net/favicon/marriott-bonvoy-icon-030524.png">
+
+<div class="slider__slides">
+  <div class="slide" id="marriott">
+    <a href="" aria-label="Jumia Coupons and Cash Back" class="slide__link"></a>
+    <div class="slide__image">
+      <img
+        width="87"
+        height="87"
+        data-src="{{ url_for('static', filename='images/jumia.jpeg') }}"
+        alt="marriott"
+        class="ls-is-cached lazyloaded"
+        src="{{ url_for('static', filename='images/jumia.jpeg') }}"
+      />
+    </div>
+    <div class="slide__text">
+      <h3>Jumia</h3>
+      <h4>1 Coupon</h4>
+      <h4>6.5% Online</h4>
+    </div>
+  </div>
+  <div class="slide" id="booking">
+    <a
+      href=""
+      aria-label="Kilimall Coupons and Cash Back"
+      class="slide__link"
+    ></a>
+    <div class="slide__image">
+      <img
+        width="87"
+        height="87"
+        data-src="{{ url_for('static', filename='images/kilimall.png') }}"
+        alt="booking"
+        class="ls-is-cached lazyloaded"
+        src="{{ url_for('static', filename='images/kilimall.png') }}"
+      />
+    </div>
+    <div class="slide__text">
+      <h3>Kilimall</h3>
+      <h4>13 Coupons</h4>
+      <h4>11% Online</h4>
+    </div>
+  </div>
+  <div class="slide" id="nike">
+    <a
+      href="https://price.com/coupons/nike"
+      aria-label="Nike Coupons and Cash Back"
+      class="slide__link"
+    ></a>
+    <div class="slide__image">
+      <img
+        width="87"
+        height="87"
+        data-src="https://d229ghlvos009z.cloudfront.net/favicon/nike-icon-030524.jpg"
+        alt="nike"
+        class="ls-is-cached lazyloaded"
+        src="https://d229ghlvos009z.cloudfront.net/favicon/nike-icon-030524.jpg"
+      />
+    </div>
+    <div class="slide__text">
+      <h3>Nike</h3>
+      <h4>11 Coupons</h4>
+      <h4>13.5% Online</h4>
+    </div>
+  </div>
+  <div class="slide" id="walmart">
+    <a
+      href="https://price.com/coupons/walmart"
+      aria-label="Walmart Coupons and Cash Back"
+      class="slide__link"
+    ></a>
+    <div class="slide__image">
+      <img
+        width="87"
+        height="87"
+        data-src="https://d229ghlvos009z.cloudfront.net/favicon/Walmart-Icon-030524.png"
+        alt="walmart"
+        class="ls-is-cached lazyloaded"
+        src="https://d229ghlvos009z.cloudfront.net/favicon/Walmart-Icon-030524.png"
+      />
+    </div>
+    <div class="slide__text">
+      <h3>Walmart</h3>
+      <h4>9 Coupons</h4>
+      <h4>3% Online</h4>
+    </div>
+  </div>
+  <div class="slide" id="target">
+    <a
+      href="https://price.com/coupons/target"
+      aria-label="Target Coupons and Cash Back"
+      class="slide__link"
+    ></a>
+    <div class="slide__image">
+      <img
+        width="87"
+        height="87"
+        data-src="https://d229ghlvos009z.cloudfront.net/favicon/target-logos-030524.jpg"
+        alt="target"
+        class="ls-is-cached lazyloaded"
+        src="https://d229ghlvos009z.cloudfront.net/favicon/target-logos-030524.jpg"
+      />
+    </div>
+    <div class="slide__text">
+      <h3>Target</h3>
+      <h4>23 Coupons</h4>
+      <h4>3% Online</h4>
+    </div>
+  </div>
+  <div class="slide" id="vineyardvines">
+    <a
+      href="https://price.com/coupons/vineyardvines"
+      aria-label="Vineyard Vines Coupons and Cash Back"
+      class="slide__link"
+    ></a>
+    <div class="slide__image">
+      <img
+        width="87"
+        height="87"
+        data-src="https://d229ghlvos009z.cloudfront.net/favicon/vineyardvines.png"
+        alt="vineyardvines"
+        class="ls-is-cached lazyloaded"
+        src="https://d229ghlvos009z.cloudfront.net/favicon/vineyardvines.png"
+      />
+    </div>
+    <div class="slide__text">
+      <h3>Vineyard Vines</h3>
+      <h4>17 Coupons</h4>
+      <h4>3% Online</h4>
+      <h4>4% In-Store</h4>
+    </div>
+  </div>
+  <div class="slide" id="chargebikes">
+    <a
+      href="https://price.com/coupons/chargebikes"
+      aria-label="Charge Bikes Coupons and Cash Back"
+      class="slide__link"
+    ></a>
+    <div class="slide__image">
+      <img
+        width="87"
+        height="87"
+        data-src="https://d229ghlvos009z.cloudfront.net/favicon/Charge_bikes_idychxfdI6_0.jpeg"
+        alt="chargebikes"
+        class="ls-is-cached lazyloaded"
+        src="https://d229ghlvos009z.cloudfront.net/favicon/Charge_bikes_idychxfdI6_0.jpeg"
+      />
+    </div>
+    <div class="slide__text">
+      <h3>Charge Bikes</h3>
+      <h4>1 Coupon</h4>
+      <h4>16% Online</h4>
+    </div>
+  </div>
+  <div class="slide" id="uber">
+    <a
+      href="https://price.com/coupons/uber"
+      aria-label="Uber Coupons and Cash Back"
+      class="slide__link"
+    ></a>
+    <div class="slide__image">
+      <img
+        width="87"
+        height="87"
+        data-src="https://d229ghlvos009z.cloudfront.net/favicon/uber_app_icon-030524.png"
+        alt="uber"
+        class="ls-is-cached lazyloaded"
+        src="https://d229ghlvos009z.cloudfront.net/favicon/uber_app_icon-030524.png"
+      />
+    </div>
+    <div class="slide__text">
+      <h3>Uber</h3>
+
+      <h4>$2 Online</h4>
+    </div>
+  </div>
+</div>
+
+<section class="section-main section-main--tertiary">
+  <h2>
+    Why ShopWiseMate?
+    <button aria-label="Watch how it works" class="main__video-trigger">
+      Watch How it Works
+    </button>
+  </h2>
+
+  <div class="shell shell--md">
+    <div class="section__inner">
+      <div class="section__image">
+        <picture>
+          <source
+            media="(max-width: 460px)"
+            srcset="
+              https://dz7smbqkw02oe.cloudfront.net/homepage/images/app-mockup2-1x.png
+            "
+          />
+          <source
+            media="(min-width : 461px) and (max-width : 767px)"
+            srcset="
+              https://dz7smbqkw02oe.cloudfront.net/homepage/images/app-mockup2-2x.png
+            "
+          />
+          <img
+            src="https://dz7smbqkw02oe.cloudfront.net/homepage/images/image-2%402x.png"
+            alt="Why Price.com"
+            width="623"
+            height="358"
+            class="ls-is-cached lazyloaded"
+          />
+        </picture>
+      </div>
+      <!-- /.section__image -->
+
+      <div class="section__content">
+        <div class="section__content-inner">
+          <h3>Always Get the Best Price</h3>
+
+          <p class="">
+            ShopWiseMate scores you the lowest price when you shop. Save on new,
+            used, and refurbished items.
+          </p>
+
+          <a
+            href="https://price.com/download"
+            class="button size-1 hidden-xs hidden-sm"
+            >Yes, Please!</a
+          >
         </div>
-        <div class="slide__text">
-            <h3>Marriott</h3>
-            <h4>2 Coupons</h4>
-            <h4>5.5% Online</h4>
+        <!-- /.section__content-inner -->
+      </div>
+      <!-- /.section__content -->
+    </div>
+    <!-- /.section__inner -->
+  </div>
+  <!-- /.shell -->
+</section>
+<section class="section-main section-main--secondary section-main--alt">
+  <div class="shell shell--md">
+    <div class="section__inner">
+      <div class="section__image">
+        <img
+          class="ls-is-cached lazyloaded"
+          src="https://dz7smbqkw02oe.cloudfront.net/homepage/images/image-4%402x.jpg"
+          alt="Never Miss on Savings"
+          width="616"
+          height="507"
+        />
+      </div>
+      <!-- /.section__image -->
 
+      <div class="section__content">
+        <div class="section__content-inner">
+          <h3>Never Miss Out on Savings</h3>
 
+          <p>
+            FOMO no more! We’ll ping your inbox when we see the price drop on
+            items you want.
+          </p>
+
+          <a
+            href="https://price.com/download"
+            class="button size-1 hidden-xs hidden-sm"
+            >Get It</a
+          >
         </div>
-     </div><div class="slide" id="booking">
-        <a href="https://price.com/coupons/booking" aria-label="Booking.com Coupons and Cash Back" class="slide__link"></a>
-        <div class="slide__image">
-            <img width="87" height="87" data-src="https://d229ghlvos009z.cloudfront.net/favicon/booking-icon-030524.png" alt="booking" class=" lazyloaded" src="https://d229ghlvos009z.cloudfront.net/favicon/booking-icon-030524.png">
+        <!-- /.section__content-inner -->
+      </div>
+      <!-- /.section__content -->
+    </div>
+    <!-- /.section__inner -->
+  </div>
+  <!-- /.shell -->
+</section>
+<section class="section-brands">
+  <header class="section__head">
+    <div class="shell">
+      <h3 style="font-weight: bold">
+        Your Favorite Brands are on ShopWiseMate
+      </h3>
+
+      <p>Stack Savings on Your Favorite Brands with ShopWiseMate</p>
+    </div>
+    <!-- /.shell -->
+  </header>
+  <!-- /.section__head -->
+
+  <div class="section__body">
+    <div class="ticker">
+      <div class="ticker__content">
+        <div class="ticker__inner">
+          <img
+            class="ls-is-cached lazyloaded"
+            src="https://dz7smbqkw02oe.cloudfront.net/extension/build/assets/images/temp/brand-logos2.webp"
+            alt="Supported Brand Logos"
+            width="1643"
+            height="379"
+          />
         </div>
-        <div class="slide__text">
-            <h3>Booking.com</h3>
-            <h4>13 Coupons</h4>
-            <h4>11% Online</h4>
 
-
+        <div class="ticker__inner">
+          <img
+            class="ls-is-cached lazyloaded"
+            src="https://dz7smbqkw02oe.cloudfront.net/extension/build/assets/images/temp/brand-logos2.webp"
+            alt="Supported Brand Logos"
+            width="1643"
+            height="379"
+          />
         </div>
-     </div><div class="slide" id="nike">
-        <a href="https://price.com/coupons/nike" aria-label="Nike Coupons and Cash Back" class="slide__link"></a>
-        <div class="slide__image">
-            <img width="87" height="87" data-src="https://d229ghlvos009z.cloudfront.net/favicon/nike-icon-030524.jpg" alt="nike" class=" lazyloaded" src="https://d229ghlvos009z.cloudfront.net/favicon/nike-icon-030524.jpg">
+
+        <div class="ticker__inner">
+          <img
+            class="ls-is-cached lazyloaded"
+            src="https://dz7smbqkw02oe.cloudfront.net/extension/build/assets/images/temp/brand-logos2.webp"
+            alt="Supported Brand Logos"
+            width="1643"
+            height="379"
+          />
         </div>
-        <div class="slide__text">
-            <h3>Nike</h3>
-            <h4>13 Coupons</h4>
-            <h4>13.5% Online</h4>
 
-
+        <div class="ticker__inner">
+          <img
+            class="ls-is-cached lazyloaded"
+            src="https://dz7smbqkw02oe.cloudfront.net/extension/build/assets/images/temp/brand-logos2.webp"
+            alt="Supported Brand Logos"
+            width="1643"
+            height="379"
+          />
         </div>
-     </div><div class="slide" id="walmart">
-        <a href="https://price.com/coupons/walmart" aria-label="Walmart Coupons and Cash Back" class="slide__link"></a>
-        <div class="slide__image">
-            <img width="87" height="87" data-src="https://d229ghlvos009z.cloudfront.net/favicon/Walmart-Icon-030524.png" alt="walmart" class=" lazyloaded" src="https://d229ghlvos009z.cloudfront.net/favicon/Walmart-Icon-030524.png">
+
+        <div class="ticker__inner">
+          <img
+            class="ls-is-cached lazyloaded"
+            src="https://dz7smbqkw02oe.cloudfront.net/extension/build/assets/images/temp/brand-logos2.webp"
+            alt="Supported Brand Logos"
+            width="1643"
+            height="379"
+          />
         </div>
-        <div class="slide__text">
-            <h3>Walmart</h3>
-            <h4>9 Coupons</h4>
-            <h4>3% Online</h4>
 
-
+        <div class="ticker__inner">
+          <img
+            class="ls-is-cached lazyloaded"
+            src="https://dz7smbqkw02oe.cloudfront.net/extension/build/assets/images/temp/brand-logos2.webp"
+            alt="Supported Brand Logos"
+            width="1643"
+            height="379"
+          />
         </div>
-     </div><div class="slide" id="target">
-        <a href="https://price.com/coupons/target" aria-label="Target Coupons and Cash Back" class="slide__link"></a>
-        <div class="slide__image">
-            <img width="87" height="87" data-src="https://d229ghlvos009z.cloudfront.net/favicon/target-logos-030524.jpg" alt="target" class=" lazyloaded" src="https://d229ghlvos009z.cloudfront.net/favicon/target-logos-030524.jpg">
-        </div>
-        <div class="slide__text">
-            <h3>Target</h3>
-            <h4>27 Coupons</h4>
-            <h4>3% Online</h4>
+      </div>
+    </div>
+  </div>
+  <!-- /.section__body -->
+</section>
+
+<section class="section-privacy">
+  <div class="shell">
+    <header class="section__head">
+      <h3>Your Privacy Matters</h3>
+    </header>
+    <!-- /.section__head -->
+
+    <div class="section__body">
+      <ul class="features">
+        <li class="feature features__feature">
+          <div class="feature__inner">
+            <div class="feature__icon">
+              <i class="ico-shield">
+                <img
+                  src="https://dz7smbqkw02oe.cloudfront.net/extension/build/assets/images/svg/shield.svg"
+                  alt="Shield"
+                  width="40"
+                  height="40"
+                />
+              </i>
+            </div>
+            <!-- /.feature__icon -->
+
+            <p>We will never sell your data to any third parties.</p>
+          </div>
+          <!-- /.feature__inner -->
+        </li>
+
+        <li class="feature features__feature">
+          <div class="feature__inner">
+            <div class="feature__icon">
+              <i class="ico-lock">
+                <img
+                  src="https://dz7smbqkw02oe.cloudfront.net/extension/build/assets/images/svg/lock.svg"
+                  alt="Lock"
+                  width="35"
+                  height="40"
+                />
+              </i>
+            </div>
+            <!-- /.feature__icon -->
+
+            <p>We use military-grade data storage and encryption.</p>
+          </div>
+          <!-- /.feature__inner -->
+        </li>
+      </ul>
+      <!-- /.features -->
+    </div>
+    <!-- /.section__body -->
+  </div>
+  <!-- /.shell -->
+</section>
+
+<div class="collect">
+  <section class="collections-grid">
+    <div class="collections-wrapper">
+      <h3>Shopping Guides</h3>
+      <ul class="collections--ul">
+        <!-- Your list items -->
+        <li>
+          <a href="https://price.com/blog/category/sporting-goods/"
+            ><figure>
+              <img
+                class="ls-is-cached lazyloaded"
+                data-src="https://d229ghlvos009z.cloudfront.net/custompic/sporting-goods.webp"
+                alt="Sporting Goods"
+                src="https://d229ghlvos009z.cloudfront.net/custompic/sporting-goods.webp"
+              />
+              <figcaption>Sporting Goods</figcaption>
+            </figure></a
+          >
+        </li>
+        <li>
+          <a href="https://price.com/blog/category/home-garden/"
+            ><figure>
+              <img
+                class="ls-is-cached lazyloaded"
+                data-src="https://d229ghlvos009z.cloudfront.net/custompic/home-garden.png"
+                alt="Home &amp; Garden"
+                src="https://d229ghlvos009z.cloudfront.net/custompic/home-garden.png"
+              />
+              <figcaption>Home &amp; Garden</figcaption>
+            </figure></a
+          >
+        </li>
+        <li>
+          <a href="https://price.com/blog/category/food-drink/"
+            ><figure>
+              <img
+                class="ls-is-cached lazyloaded"
+                data-src="https://d229ghlvos009z.cloudfront.net/custompic/Food-drinks.webp"
+                alt="Food &amp; Drinks"
+                src="https://d229ghlvos009z.cloudfront.net/custompic/Food-drinks.webp"
+              />
+              <figcaption>Food &amp; Drinks</figcaption>
+            </figure></a
+          >
+        </li>
+        <li>
+          <a href="https://price.com/blog/category/toys-games/"
+            ><figure>
+              <img
+                class="ls-is-cached lazyloaded"
+                data-src="https://d229ghlvos009z.cloudfront.net/custompic/toys-games.webp"
+                alt="Toys &amp; Games"
+                src="https://d229ghlvos009z.cloudfront.net/custompic/toys-games.webp"
+              />
+              <figcaption>Toys &amp; Games</figcaption>
+            </figure></a
+          >
+        </li>
+        <li>
+          <a href="https://price.com/blog/category/electronics/"
+            ><figure>
+              <img
+                class="ls-is-cached lazyloaded"
+                data-src="https://d229ghlvos009z.cloudfront.net/custompic/Tech.webp"
+                alt="Electronics"
+                src="https://d229ghlvos009z.cloudfront.net/custompic/Tech.webp"
+              />
+              <figcaption>Electronics</figcaption>
+            </figure></a
+          >
+        </li>
+        <li>
+          <a href="https://price.com/blog/category/health-beauty/"
+            ><figure>
+              <img
+                class="ls-is-cached lazyloaded"
+                data-src="https://d229ghlvos009z.cloudfront.net/custompic/health-beauty.webp"
+                alt="Health &amp; Beauty"
+                src="https://d229ghlvos009z.cloudfront.net/custompic/health-beauty.webp"
+              />
+              <figcaption>Health &amp; Beauty</figcaption>
+            </figure></a
+          >
+        </li>
+        <li>
+          <a href="https://price.com/blog/category/animals-pets/"
+            ><figure>
+              <img
+                class="ls-is-cached lazyloaded"
+                data-src="https://d229ghlvos009z.cloudfront.net/custompic/pets.jpg"
+                alt="Pets"
+                src="https://d229ghlvos009z.cloudfront.net/custompic/pets.jpg"
+              />
+              <figcaption>Pets</figcaption>
+            </figure></a
+          >
+        </li>
+        <li>
+          <a href="https://price.com/blog/category/cameras-optics/"
+            ><figure>
+              <img
+                class="ls-is-cached lazyloaded"
+                data-src="https://d229ghlvos009z.cloudfront.net/custompic/cameras.webp"
+                alt="Camera Gear"
+                src="https://d229ghlvos009z.cloudfront.net/custompic/cameras.webp"
+              />
+              <figcaption>Camera Gear</figcaption>
+            </figure></a
+          >
+        </li>
+        <li>
+          <a href="https://price.com/blog/category/luggage-bags/"
+            ><figure>
+              <img
+                class="lazyloaded"
+                data-src="https://d229ghlvos009z.cloudfront.net/custompic/travel.webp"
+                alt="Great for Travelers"
+                src="https://d229ghlvos009z.cloudfront.net/custompic/travel.webp"
+              />
+              <figcaption>Great for Travelers</figcaption>
+            </figure></a
+          >
+        </li>
+        <li>
+          <a href="https://price.com/blog/category/vehicles-parts/"
+            ><figure>
+              <img
+                class="ls-is-cached lazyloaded"
+                data-src="https://d229ghlvos009z.cloudfront.net/custompic/jeep.webp"
+                alt="Vehicle Enthusiast"
+                src="https://d229ghlvos009z.cloudfront.net/custompic/jeep.webp"
+              />
+              <figcaption>Vehicle Enthusiast</figcaption>
+            </figure></a
+          >
+        </li>
+        <li>
+          <a href="https://price.com/blog/category/furniture/"
+            ><figure>
+              <img
+                class="lazyloaded"
+                data-src="https://d229ghlvos009z.cloudfront.net/custompic/Furniture.png"
+                alt="Furniture"
+                src="https://d229ghlvos009z.cloudfront.net/custompic/Furniture.png"
+              />
+              <figcaption>Furniture</figcaption>
+            </figure></a
+          >
+        </li>
+        <li>
+          <a href="https://price.com/blog/category/baby-toddler/"
+            ><figure>
+              <img
+                class="lazyloaded"
+                data-src="https://d229ghlvos009z.cloudfront.net/custompic/Baby.png"
+                alt="Baby &amp; Toddler"
+                src="https://d229ghlvos009z.cloudfront.net/custompic/Baby.png"
+              />
+              <figcaption>Baby &amp; Toddler</figcaption>
+            </figure></a
+          >
+        </li>
+        <li>
+          <a href="https://price.com/blog/category/holiday-shopping/"
+            ><figure>
+              <img
+                class="lazyloaded"
+                data-src="https://d229ghlvos009z.cloudfront.net/custompic/Holiday-shopping.webp"
+                alt="Holiday Gifts"
+                src="https://d229ghlvos009z.cloudfront.net/custompic/Holiday-shopping.webp"
+              />
+              <figcaption>Holiday Gifts</figcaption>
+            </figure></a
+          >
+        </li>
+      </ul>
+    </div>
+  </section>
+  <div class="seymour-container"><button class="button-collection">Load More</button></div>
+</div>
 
 
-        </div>
-     </div><div class="slide" id="chargebikes">
-        <a href="https://price.com/coupons/chargebikes" aria-label="Charge Bikes Coupons and Cash Back" class="slide__link"></a>
-        <div class="slide__image">
-            <img width="87" height="87" data-src="https://d229ghlvos009z.cloudfront.net/favicon/Charge_bikes_idychxfdI6_0.jpeg" alt="chargebikes" class=" lazyloaded" src="https://d229ghlvos009z.cloudfront.net/favicon/Charge_bikes_idychxfdI6_0.jpeg">
-        </div>
-        <div class="slide__text">
-            <h3>Charge Bikes</h3>
-            <h4>2 Coupons</h4>
-            <h4>16% Online</h4>
 
 
-        </div>
-     </div><div class="slide" id="petco">
-        <a href="https://price.com/coupons/petco" aria-label="Petco Coupons and Cash Back" class="slide__link"></a>
-        <div class="slide__image">
-            <img width="87" height="87" data-src="https://d229ghlvos009z.cloudfront.net/favicon/petco-icon-030524.png" alt="petco" class=" lazyloaded" src="https://d229ghlvos009z.cloudfront.net/favicon/petco-icon-030524.png">
-        </div>
-        <div class="slide__text">
-            <h3>Petco</h3>
-            <h4>4 Coupons</h4>
-            <h4>1% Online</h4>
 
-
-        </div>
-     </div><div class="slide" id="uber">
-        <a href="https://price.com/coupons/uber" aria-label="Uber Coupons and Cash Back" class="slide__link"></a>
-        <div class="slide__image">
-            <img width="87" height="87" data-src="https://d229ghlvos009z.cloudfront.net/favicon/uber_app_icon-030524.png" alt="uber" class=" lazyloaded" src="https://d229ghlvos009z.cloudfront.net/favicon/uber_app_icon-030524.png">
-        </div>
-        <div class="slide__text">
-            <h3>Uber</h3>
-
-            <h4>$2 Online</h4>
-
-
-        </div>
-     </div></div>
+</section>
 
 {% endblock %}
