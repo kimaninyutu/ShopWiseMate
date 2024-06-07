@@ -5,10 +5,10 @@ from pymongo.server_api import ServerApi
 app = Flask(__name__)
 
 # MongoDB connection
-#uri = ("mongodb+srv://kimanihezekiah:Kimani_4802@cluster0.w7vjsqj.mongodb.net/?retryWrites=true&w=majority&appName"
-       #"=Cluster0")
-#client = MongoClient(uri, server_api=ServerApi('1'))
-#db = client["Jumia"]
+uri = ("mongodb+srv://kimanihezekiah:Kimani_4802@cluster0.w7vjsqj.mongodb.net/?retryWrites=true&w=majority&appName"
+       "=Cluster0")
+client = MongoClient(uri, server_api=ServerApi('1'))
+db = client["Jumia"]
 
 # Define valid collections
 valid_collections = {
