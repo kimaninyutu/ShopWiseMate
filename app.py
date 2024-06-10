@@ -32,7 +32,8 @@ valid_collections = {
     "musical-instruments": "MUSICAL_INSTRUMENTS",
     "pet-supplies": "PET_SUPPLIES",
     "services": "SERVICES",
-    "toys-games": "TOYS_GAMES"
+    "toys-games": "TOYS_GAMES",
+    "other": "OTHER"
 }
 
 
@@ -49,6 +50,15 @@ def show_category(category):
 
     products = db[valid_collections[category]].find()
     return render_template("category.html", category=category.replace("-", " ").title(), products=products)
+
+
+@app.route("/jumia")
+def show_jumia():
+    return render_template("home.html")
+
+@app.route("/kilimall")
+def show_kilimall():
+    return render_template("home.html")
 
 
 if __name__ == "__main__":
