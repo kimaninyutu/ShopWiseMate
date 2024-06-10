@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ShopWiseMate{% endblock %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Categories
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/phones-tablets">Phones & Tablets</a>
+                            <a class="dropdown-item" href="/electronics">Electronics</a>
+                            <a class="dropdown-item" href="/home-office-appliances">Home & Office Appliances</a>
+                            <a class="dropdown-item" href="/health-beauty">Health & Beauty</a>
+                            <a class="dropdown-item" href="/home-office">Home Office</a>
+                            <a class="dropdown-item" href="/fashion">Fashion</a>
+                            <a class="dropdown-item" href="/computing">Computing</a>
+                            <a class="dropdown-item" href="/supermarket">Supermarket</a>
+                            <a class="dropdown-item" href="/baby-products">Baby Products</a>
+                            <a class="dropdown-item" href="/sporting-goods">Sporting Goods</a>
+                            <a class="dropdown-item" href="/automobile">Automobile</a>
+                            <a class="dropdown-item" href="/video-games">Video Games</a>
+                            <a class="dropdown-item" href="/patio-lawn-garden">Patio, Lawn & Garden</a>
+                            <a class="dropdown-item" href="/books-movies-music">Books, Movies & Music</a>
+                            <a class="dropdown-item" href="/livestock">Livestock</a>
+                            <a class="dropdown-item" href="/industrial-scientific">Industrial & Scientific</a>
+                            <a class="dropdown-item" href="/miscellaneous">Miscellaneous</a>
+                            <a class="dropdown-item" href="/musical-instruments">Musical Instruments</a>
+                            <a class="dropdown-item" href="/pet-supplies">Pet Supplies</a>
+                            <a class="dropdown-item" href="/services">Services</a>
+                            <a class="dropdown-item" href="/toys-games">Toys & Games</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <button class="button button--search" aria-label="Search" type="button">
+            <img width="20" height="30" src="https://dz7smbqkw02oe.cloudfront.net/images/header-icons/search-icon-blk.svg" alt="Search">
+        </button>
+        <div class="overlay" id="overlay">
+        <div class="overlay-content">
+            <div class="overlay-inner">
+                <span class="close-btn" id="close-btn">&times;</span>
+                <input type="text" class="search-input" placeholder="Search...">
+            </div>
+        </div>
+    </div>
+        <div class="header__logo">
+            <a href="/">
+                <picture>
+                    <source media="(max-width: 767px)" srcset="https://dz7smbqkw02oe.cloudfront.net/images/price-logo-icon.svg">
+                    <img width="200" height="48" src="{{ url_for('static', filename='images/logo1.svg') }}" alt="Price.com">
+                </picture>
+            </a>
+        </div>
+
+        <div class="button--profile show">
+            <button class="button button--profile__register" aria-label="Register">Register</button>
+            <button class="button button--profile__signin" aria-label="Sign In">Sign-In</button>
+        </div>
+
+        <input type="hidden" id="mogl_token" value="">
+        <input type="hidden" id="mogl_email" value="">
+        <input type="hidden" id="mogl_id" value="">
+    </header>
+
+    <!-- Search Overlay -->
+
+    <footer class="footer">
+        <div class="shell">
+            <div class="footer__inner">
+                <figure class="logo">
+                    <figcaption>
+                        <span>© ShopWiseMate Technologies Inc.</span>
+                        <span>10000 Santa Monica Blvd, Nairobi, KENYA, 90067</span>
+                    </figcaption>
+                </figure>
+                <div class="social">
+                    <a href="https://www.tiktok.com/@pricedotcom?"><img src="https://dz7smbqkw02oe.cloudfront.net/footer/assets/images/tiktok-black.svg" alt="tiktok"></a>
+                    <a href="https://www.instagram.com/pricedotcom/"><img src="https://dz7smbqkw02oe.cloudfront.net/footer/assets/images/instagram-black.svg" alt="instagram"></a>
+                    <a href="https://www.facebook.com/getpriceapp"><img src="https://dz7smbqkw02oe.cloudfront.net/footer/assets/images/facebook-black.svg" alt="facebook"></a>
+                    <a href="https://www.pinterest.com/getpriceapp/"><img src="https://dz7smbqkw02oe.cloudfront.net/footer/assets/images/pinterest-black.svg" alt="pinterest"></a>
+                    <a href="https://twitter.com/getpriceapp"><img src="https://dz7smbqkw02oe.cloudfront.net/footer/assets/images/x-black.svg" alt="twitter"></a>
+                </div>
+            </div>
+            <div class="footer__links">
+                <a href="mailto:hello@price.com">Contact</a>
+                <a href="https://www.linkedin.com/company/pricedotcom/jobs/">Jobs</a>
+                <a href="/terms">Terms</a>
+                <a href="/press">Press</a>
+                <a href="/privacy">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
+

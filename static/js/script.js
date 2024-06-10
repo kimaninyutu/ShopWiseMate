@@ -14,3 +14,24 @@ document.addEventListener('DOMContentLoaded', function () {
         loadMoreButton.style.display = 'none'; // Hide the "Load More" button
     });
 });
+
+// Get references to the search button and overlay
+const searchBtn = document.getElementById("search-btn");
+const overlay = document.getElementById("overlay");
+
+// Add event listener to the search button
+searchBtn.addEventListener("click", function() {
+    // Toggle the visibility of the overlay
+    overlay.classList.toggle("show");
+
+    // If the overlay is now visible, focus on the search input
+    if (overlay.classList.contains("show")) {
+        document.querySelector(".search-input").focus();
+    }
+});
+
+// Add event listener to the search input to shrink the overlay when focus is lost
+document.querySelector(".search-input").addEventListener("blur", function() {
+    // Hide the overlay
+    overlay.classList.remove("show");
+});

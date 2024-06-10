@@ -1,0 +1,164 @@
+/* Body Styling */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0; /* Reset default margin */
+}
+
+/* Header Styling */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 70px;
+    z-index: 1;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.header div.menu {
+    display: flex;
+    align-items: center;
+    z-index: 4;
+}
+
+.button.button--menu {
+    padding: 15px;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+}
+
+.button.button--menu figure {
+    display: flex;
+}
+
+.header__logo {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
+
+.button--search {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    margin-left: 1em;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.button--profile {
+    display: flex;
+}
+
+.button--profile__register, .button--profile__signin {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* Footer Styling */
+.footer {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+    text-align: center;
+    margin-top: auto;
+}
+
+.footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Change to column layout */
+}
+
+.logo figcaption {
+    font-size: 14px;
+    color: #888;
+    margin-top: 0; /* Add some space between logo and text */
+}
+
+.social {
+    margin-top: 0; /* Move social icons below text */
+}
+
+.social a {
+    margin: 0 10px;
+}
+
+.footer__links {
+    margin-top: 0;
+}
+
+.footer__links a {
+    margin: 0 10px;
+    color: #888;
+    text-decoration: none;
+}
+
+.footer__links a:hover {
+    color: #333;
+}
+
+/* General Styles */
+body, button, div, form, header, input, section, table, td {
+    box-sizing: border-box;
+    font-family: Montserrat, Trebuchet MS, Helvetica, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    image-rendering: -webkit-optimize-contrast;
+    height: auto;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Search Overlay */
+/* Search Overlay */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+
+.overlay-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.overlay-inner {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 80%;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}

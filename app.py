@@ -21,7 +21,7 @@ valid_collections = {
     "computing": "COMPUTING",
     "supermarket": "SUPERMARKET",
     "baby-products": "BABY_PRODUCTS",
-    "sporting-goods": "SPORTING_GOODS",
+    "sporting-goods": "sporting-goods",
     "automobile": "AUTOMOBILE",
     "video-games": "GAMING",
     "patio-lawn-garden": "GARDEN_OUTDOOR",
@@ -59,6 +59,11 @@ def show_jumia():
 @app.route("/kilimall")
 def show_kilimall():
     return render_template("home.html")
+
+
+@app.route("/sporting-goods")
+def show_sportinggoods():
+    return render_template("base2.html")
 
 
 if __name__ == "__main__":
