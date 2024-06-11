@@ -7,32 +7,66 @@ app = Flask(__name__)
 # MongoDB connection
 uri = ("mongodb+srv://kimanihezekiah:Kimani_4802@cluster0.w7vjsqj.mongodb.net/?retryWrites=true&w=majority&appName"
        "=Cluster0")
+# Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
-db = client["Jumia"]
+database = client["Jumia"]
+
+# Get the list of collection names
+collection_names = database.list_collection_names()
+
+
+def get_products(collection_name):
+    products = []
+    collection = database[collection_name]
+    print(f"Retrieving documents from collection: {collection_name}")
+
+    # Retrieve specific fields from each document in the collection
+    documents = collection.find({}, {
+        "name": 1,
+        "product_link": 1,
+        "price": 1,
+        "rating": 1,
+        "image": 1,
+        "other_images": 1,
+        "product_descriptions": 1
+    })
+
+    # Append each document (product) to the products list
+    count = 0
+    for document in documents:
+        count += 1
+        if count >= 500:
+            break
+        else:
+
+            products.append(document)
+
+    return products
+
 
 # Define valid collections
 valid_collections = {
-    "phones-tablets": "PHONE_TABLETS",
+    "phoneTablets": "PHONE_TABLETS",
     "electronics": "ELECTRONICS",
-    "home-office-appliances": "APPLIANCES",
+    "appliances": "APPLIANCES",
     "health-beauty": "HEALTH_BEAUTY",
     "home-office": "HOME_OFFICE",
     "fashion": "FASHION",
     "computing": "COMPUTING",
     "supermarket": "SUPERMARKET",
-    "baby-products": "BABY_PRODUCTS",
-    "sporting-goods": "sporting-goods",
+    "babyproducts": "BABY_PRODUCTS",
+    "sportinggoods": "sporting-goods",
     "automobile": "AUTOMOBILE",
-    "video-games": "GAMING",
-    "patio-lawn-garden": "GARDEN_OUTDOOR",
-    "books-movies-music": "BOOKS_MOVIE_MUSIC",
+    "gaming": "GAMING",
+    "gardenoutdoor": "GARDEN_OUTDOOR",
+    "books_movie_music": "BOOKS_MOVIE_MUSIC",
     "livestock": "LIVESTOCK",
-    "industrial-scientific": "INDUSTRIAL_SCIENTIFIC",
+    "industrialscientific": "INDUSTRIAL_SCIENTIFIC",
     "miscellaneous": "MISCELLANEOUS",
-    "musical-instruments": "MUSICAL_INSTRUMENTS",
-    "pet-supplies": "PET_SUPPLIES",
+    "musicalintruments": "MUSICAL_INSTRUMENTS",
+    "petsupplies": "PET_SUPPLIES",
     "services": "SERVICES",
-    "toys-games": "TOYS_GAMES",
+    "toys_games": "TOYS_GAMES",
     "other": "OTHER"
 }
 
@@ -48,7 +82,16 @@ def show_category(category):
     if category not in valid_collections:
         return "Category not found", 404
 
-    products = db[valid_collections[category]].find()
+    # Get the name of the collection corresponding to the category
+    collection_name = valid_collections[category]
+
+    # Use the Jumia class to fetch products from the specified collection
+    jumia_instance = get_products(category)
+
+    products = jumia_instance
+    print(products)
+
+    # Render the category.html template with the fetched products
     return render_template("category.html", category=category.replace("-", " ").title(), products=products)
 
 
@@ -56,15 +99,12 @@ def show_category(category):
 def show_jumia():
     return render_template("home.html")
 
+
 @app.route("/kilimall")
 def show_kilimall():
     return render_template("home.html")
 
 
-@app.route("/sporting-goods")
-def show_sportinggoods():
-    return render_template("base2.html")
-
-
 if __name__ == "__main__":
     app.run(debug=True)
+    app.run(development=True)

@@ -162,3 +162,48 @@ img {
     right: 10px;
     cursor: pointer;
 }
+
+.card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 0.9em;
+}
+
+.btn-primary {
+    margin-top: auto;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+@media (max-width: 767px) {
+    .card-img-top {
+        height: 150px;
+    }
+}
+

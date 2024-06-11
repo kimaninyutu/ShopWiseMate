@@ -35,3 +35,29 @@ document.querySelector(".search-input").addEventListener("blur", function() {
     // Hide the overlay
     overlay.classList.remove("show");
 });
+
+
+valid_collections = {
+    "phoneTablets": "PHONE_TABLETS",
+    "electronics": "ELECTRONICS",
+    "appliances": "APPLIANCES",
+    "health-beauty": "HEALTH_BEAUTY",
+    "home-office": "HOME_OFFICE",
+    "fashion": "FASHION",
+    "computing": "COMPUTING",
+    "supermarket": "SUPERMARKET",
+    "babyproducts": "BABY_PRODUCTS",
+    "sportinggoods": "sporting-goods",
+    "automobile": "AUTOMOBILE",
+    "gaming": "GAMING",
+    "gardenoutdoor": "GARDEN_OUTDOOR",
+    "books_movie_music": "BOOKS_MOVIE_MUSIC",
+    "livestock": "LIVESTOCK",
+    "industrialscientific": "INDUSTRIAL_SCIENTIFIC",
+    "miscellaneous": "MISCELLANEOUS",
+    "musicalintruments": "MUSICAL_INSTRUMENTS",
+    "petsupplies": "PET_SUPPLIES",
+    "services": "SERVICES",
+    "toys_games": "TOYS_GAMES",
+    "other": "OTHER"
+}
