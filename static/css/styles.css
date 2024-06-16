@@ -207,3 +207,144 @@ img {
     }
 }
 
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+/* Product Image */
+.product-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Product Details */
+.product-details {
+    margin-top: 20px;
+}
+
+.product-name {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.product-category {
+    color: #777;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.product-price {
+    font-size: 1.5rem;
+    color: #28a745;
+    margin-bottom: 20px;
+}
+
+.product-description {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.product-actions form {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.product-actions .btn {
+    width: 150px;
+    font-size: 1rem;
+}
+
+/* Related Products */
+.related-products {
+    margin-top: 50px;
+}
+
+.related-products h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.related-products .card {
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.related-products .card img {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.related-products .card-title {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.related-products .card-text {
+    font-size: 1rem;
+    color: #28a745;
+}
+
+.related-products .btn {
+    font-size: 0.875rem;
+    width: 100%;
+}
+
+.carousel-indicators img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    margin: 5px;
+    cursor: pointer;
+}
+.carousel-indicators {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.product-prices {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.product-old-price {
+    font-size: 1.2rem;
+    color: #777;
+    text-decoration: line-through;
+}
+
+.product-new-price {
+    font-size: 1.5rem;
+    color: #e60023;
+    font-weight: bold;
+}
+
+.product-description {
+    padding-left: 20px; /* Add some left padding */
+    list-style-type: square; /* Use square bullet points */
+    color: #333; /* Set text color */
+}
+
+ .cart-staff img {
+            width: 24px; /* Adjust the width of the cart icon */
+            height: 24px; /* Adjust the height of the cart icon */
+            margin-right: 5px; /* Add some spacing between the icon and count */
+        }
+        #cart-count {
+            font-size: 14px; /* Adjust the font size of the count */
+            line-height: 24px; /* Center the count vertically with the icon */
+            border-radius: 50%; /* Make the count circular */
+            background-color: #007bff; /* Add background color to the count */
+            color: #fff; /* Add text color to the count */
+            padding: 0 6px; /* Add padding to the count */
+        }

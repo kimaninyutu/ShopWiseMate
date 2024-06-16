@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ShopWiseMate{% endblock %}</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -47,6 +48,12 @@
                 </ul>
             </div>
         </nav>
+        <div class="cart-staff">
+            <a href="/cart">
+                <img src="{{ url_for('static', filename='images/cart-icon.png') }}" alt="Cart">
+                <span id="cart-count">{{ cart_count }}</span>
+            </a>
+        </div>
         <button class="button button--search" aria-label="Search" type="button">
             <img width="20" height="30" src="https://dz7smbqkw02oe.cloudfront.net/images/header-icons/search-icon-blk.svg" alt="Search">
         </button>
@@ -110,7 +117,9 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
 

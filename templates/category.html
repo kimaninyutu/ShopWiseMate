@@ -15,11 +15,14 @@
                             <h5 class="card-title">{{ product.name }}</h5>
                             <p class="card-text">{{ product.price }}</p>
                             <p class="card-text">Rating: {{ product.rating }}</p>
-                            <a href="{{ product.product_link }}" class="btn btn-primary">View Product</a>
+                            <a href="{{ url_for('product_page', product_id=product._id) }}" class="btn btn-primary">View Product</a>
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
+    </div>
+    <div>
+        {{ products }}
     </div>
 {% endblock %}
