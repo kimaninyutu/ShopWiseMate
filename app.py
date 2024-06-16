@@ -1,26 +1,28 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 
 app = Flask(__name__)
 
-# MongoDB connection
-uri = ("mongodb+srv://kimanihezekiah:Kimani_4802@cluster0.w7vjsqj.mongodb.net/?retryWrites=true&w=majority&appName"
-       "=Cluster0")
-# Create a new client and connect to the server
-client = MongoClient(uri, server_api=ServerApi('1'))
-database = client["Jumia"]
+# MongoDB connection for Jumia
+uri_jumia = ("mongodb+srv://kimanihezekiah:Kimani_4802@cluster0.w7vjsqj.mongodb.net/?retryWrites=true&w=majority&appName"
+             "=Cluster0")
+client_jumia = MongoClient(uri_jumia, server_api=ServerApi('1'))
+database_jumia = client_jumia["Jumia"]
+collection_names_jumia = database_jumia.list_collection_names()
 
-# Get the list of collection names
-collection_names = database.list_collection_names()
+# MongoDB connection for Kil
+uri_kil = ("mongodb+srv://kimanihezekiah:Kimani_4802@cluster0.w7vjsqj.mongodb.net/?retryWrites=true&w=majority&appName"
+           "=Cluster0")
+client_kil = MongoClient(uri_kil, server_api=ServerApi('1'))
+database_kil = client_kil["Kil"]
+collection_names_kil = database_kil.list_collection_names()
 
-
-def get_products(collection_name):
+def get_products(database, collection_name):
     products = []
     collection = database[collection_name]
     print(f"Retrieving documents from collection: {collection_name}")
 
-    # Retrieve specific fields from each document in the collection
     documents = collection.find({}, {
         "name": 1,
         "product_link": 1,
@@ -31,20 +33,53 @@ def get_products(collection_name):
         "product_descriptions": 1
     })
 
-    # Append each document (product) to the products list
     count = 0
     for document in documents:
         count += 1
         if count >= 500:
             break
         else:
-
             products.append(document)
 
     return products
 
+def search_products(search_term):
+    products = []
 
-# Define valid collections
+    # Search in Jumia collections
+    for collection_name in collection_names_jumia:
+        collection = database_jumia[collection_name]
+        documents = collection.find({"name": {"$regex": search_term, "$options": "i"}}, {
+            "name": 1,
+            "product_link": 1,
+            "price": 1,
+            "rating": 1,
+            "image": 1,
+            "other_images": 1,
+            "product_descriptions": 1
+        })
+        for document in documents:
+            document['source'] = 'Jumia'
+            products.append(document)
+
+    # Search in Kil collections
+    for collection_name in collection_names_kil:
+        collection = database_kil[collection_name]
+        documents = collection.find({"name": {"$regex": search_term, "$options": "i"}}, {
+            "name": 1,
+            "product_link": 1,
+            "price": 1,
+            "rating": 1,
+            "image": 1,
+            "other_images": 1,
+            "product_descriptions": 1
+        })
+        for document in documents:
+            document['source'] = 'Kil'
+            products.append(document)
+
+    return products
+
 valid_collections = {
     "phoneTablets": "PHONE_TABLETS",
     "electronics": "ELECTRONICS",
@@ -70,28 +105,30 @@ valid_collections = {
     "other": "OTHER"
 }
 
-
 @app.route("/")
-@app.route("/home")
+@app.route("/home", methods=["GET", "POST"])
 def home():
+    if request.method == "GET":
+        search = request.args.get("searchProduct")
+        if search:
+            print(search)
+            search_results = search_products(search)
+            return render_template("search_results.html", products=search_results, search_term=search)
+        else:
+            pass
     return render_template("home.html")
-
 
 @app.route("/<category>")
 def show_category(category):
     if category not in valid_collections:
         return "Category not found", 404
 
-    # Get the name of the collection corresponding to the category
     collection_name = valid_collections[category]
 
-    # Use the Jumia class to fetch products from the specified collection
-    jumia_instance = get_products(category)
-
+    jumia_instance = get_products(database_jumia, category)
     products = jumia_instance
     print(products)
 
-    # Render the category.html template with the fetched products
     return render_template("category.html", category=category.replace("-", " ").title(), products=products)
 
 
