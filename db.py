@@ -70,5 +70,6 @@ def scrape_product_details(product_link):
         return None
 
 
-scrape_product_details("https://www.jumia.co.ke//vitron-htc4388fs-43-smart-android-frameless-tv-black-1yr-wrty"
-                       "-93348943.html")
+product ={"name": "kimani"}
+
+print(product.na)

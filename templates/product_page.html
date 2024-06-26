@@ -57,10 +57,15 @@
                         <input type="hidden" name="product_id" value="{{ product.id }}">
                         <button type="submit" class="btn btn-primary">Add to Cart</button>
                     </form>
-                    <form method="POST" action="/buy_now">
-                        <input type="hidden" name="product_id" value="{{ product.id }}">
-                        <button type="submit" class="btn btn-success">Buy Now</button>
+                    <form method="POST">
+                        <input type="hidden" name="name" value="{{ product.name }}">
+                        <button type="submit" name="find_cheapest" class="btn btn-success">FindCheapest</button>
                     </form>
+                     <form method="POST" id="viewProductForm">
+                        <input type="hidden" name="product_link" value="{{ product.product_link }}">
+                        <a href="{{ product.product_link }}" class="btn btn-primary">View Product</a>
+                    </form>
+
                 </div>
             </div>
         </div>

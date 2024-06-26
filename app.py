@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
@@ -5,9 +6,13 @@ from bs4 import BeautifulSoup
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from bson.objectid import ObjectId  # Ensure this import for ObjectId
+from bson.objectid import ObjectId # Ensure this import for ObjectId
+from dataset.product_comparison import Compare, cheapest_in_kilimal, cheapest_in_jumia, cheapest_of_all
 
 app = Flask(__name__)
+
+config_class = 'config.DevelopmentConfig' if os.getenv('FLASK_ENV') == 'development' else 'config.ProductionConfig'
+app.config.from_object(config_class)
 
 # MongoDB connection for Jumia
 uri_jumia = (
@@ -229,6 +234,42 @@ def product_page(product_id):
         return "Could not retrieve product details", 500
 
     related_products = get_related_products(product.get("category", ""))
+
+    if request.method == "POST":
+        if 'find_cheapest' in request.form:
+            product_name = request.form.get("name")
+            compare = Compare(product_name)
+            compare.compare(product_name)
+
+            # Ensure the lists are not empty
+            if cheapest_in_jumia:
+                product1 = cheapest_in_jumia[0]
+                jumia = scrape_product_details(product1["link"])
+            else:
+                jumia = None
+
+            if cheapest_in_kilimal:
+                product2 = cheapest_in_kilimal[0]
+                kilimal = scrape_product_details(product2["link"])
+            else:
+                kilimal = None
+
+            if cheapest_of_all:
+                product3 = cheapest_of_all[0]
+                cheapest = scrape_product_details(product3["link"])
+            else:
+                cheapest = None
+
+            return render_template(
+                "compare.html",
+                product1=jumia,
+                product2=kilimal,
+                product3=cheapest
+            )
+        else:
+            # Handle add to cart or view product form submission here
+            pass
+
     return render_template("product_page.html", product=detailed_product, related_products=related_products)
 
 

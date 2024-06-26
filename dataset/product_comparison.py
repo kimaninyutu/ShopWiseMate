@@ -10,6 +10,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+cheapest_in_kilimal = []
+cheapest_in_jumia =[]
+cheapest_of_all = []
 class KilimallScraper:
     def __init__(self, driver):
         self.driver = driver
@@ -104,6 +107,7 @@ def compare_prices(product_name):
         cheapest_price_jumia = min(prices_jumia)
         cheapest_product_jumia = results_jumia[prices_jumia.index(cheapest_price_jumia)]
         print("Cheapest product found on Jumia:")
+        cheapest_in_jumia.append(cheapest_product_jumia)
         print(cheapest_product_jumia)
 
         time.sleep(5)
@@ -120,14 +124,19 @@ def compare_prices(product_name):
         cheapest_price_kilimall = min(prices_kilimall)
         cheapest_product_kilimall = results_kilimall[prices_kilimall.index(cheapest_price_kilimall)]
         print("Cheapest product found on Kilimall:")
+        cheapest_in_kilimal.append(cheapest_product_kilimall)
         print(cheapest_product_kilimall)
 
         if cheapest_price_jumia < cheapest_price_kilimall:
             print("The cheapest product is from Jumia.")
             print("Details:", cheapest_product_jumia)
+            cheapest_of_all.append(cheapest_product_jumia)
+            return cheapest_price_jumia
         else:
             print("The cheapest product is from Kilimall.")
             print("Details:", cheapest_product_kilimall)
+            cheapest_of_all.append(cheapest_product_kilimall)
+            return cheapest_product_kilimall
 
     except Exception as e:
         print(f"An error occurred while comparing prices: {e}")
@@ -137,6 +146,16 @@ def compare_prices(product_name):
         scraper_kilimall.close()
 
 
-if __name__ == "__main__":
-    product_name = "Geo Geobook 120, Intel Celeron"
-    compare_prices(product_name)
+#if __name__ == "__main__":
+ #   product_name = "infinix hot 40i"
+  #  compare_prices(product_name)
+
+
+class Compare:
+    def __init__(self,name):
+        self.name = name
+
+    @staticmethod
+    def compare(name):
+        compare_prices(name)
+

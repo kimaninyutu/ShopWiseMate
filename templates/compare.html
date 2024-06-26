@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Compare Prices</title>
+</head>
+<body>
+    <h1>Compare Prices</h1>
+
+    {% if product1 %}
+        <div>
+            <h2>Cheapest in Jumia</h2>
+            <p>Name: {{ product1.name }}</p>
+            <p>Price: {{ product1.price }}</p>
+            <img src="{{ product1.image }}" alt="{{ product1.name }}">
+        </div>
+    {% else %}
+        <p>No product found in Jumia.</p>
+    {% endif %}
+
+    {% if product2 %}
+        <div>
+            <h2>Cheapest in Kilimall</h2>
+            <p>Name: {{ product2.name }}</p>
+            <p>Price: {{ product2.price }}</p>
+            <img src="{{ product2.image }}" alt="{{ product2.name }}">
+        </div>
+    {% else %}
+        <p>No product found in Kilimall.</p>
+    {% endif %}
+
+    {% if product3 %}
+        <div>
+            <h2>Cheapest Overall</h2>
+            <p>Name: {{ product3.name }}</p>
+            <p>Price: {{ product3.price }}</p>
+            <img src="{{ product3.image }}" alt="{{ product3.name }}">
+        </div>
+    {% else %}
+        <p>No product found overall.</p>
+    {% endif %}
+</body>
+</html>
+
