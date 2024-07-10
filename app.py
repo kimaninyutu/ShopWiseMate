@@ -1,5 +1,8 @@
+import functools
 import os
-from flask import Flask, render_template, request, redirect, url_for
+import secrets
+import passlib
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from bs4 import BeautifulSoup
@@ -10,19 +13,23 @@ from bson.objectid import ObjectId  # Ensure this import for ObjectId
 from dataset.product_comparison import Compare, cheapest_in_kilimal, cheapest_in_jumia, cheapest_of_all
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+from passlib.hash import pbkdf2_sha256
+
+
+#from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 
-# Configure the Flask app before creating the SQLAlchemy instance
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'tjisisasecretkey'
-
+app.secret_key = secrets.token_urlsafe(32)
 config_class = 'config.DevelopmentConfig' if os.getenv('FLASK_ENV') == 'development' else 'config.ProductionConfig'
 app.config.from_object(config_class)
 
+users_uri = ("mongodb+srv://kimanihezekiah:Kimani_4802@cluster0.w7vjsqj.mongodb.net/?retryWrites=true&w=majority&appName"
+    "=Cluster0")
 # Initialize the SQLAlchemy instance after the configuration
-db = SQLAlchemy(app)
+users_db = MongoClient(users_uri, server_api=ServerApi("1"))
+users_database = users_db["users"]
+users_collection = users_database["users"]
 
 # MongoDB connection for Jumia
 uri_jumia = (
@@ -35,16 +42,21 @@ collection_names_jumia = database_jumia.list_collection_names()
 
 # MongoDB connection for Kil
 uri_kil = (
-    "mongodb+srv://kimanihezekiah:Kimani_4802@cluster0.w7vjsqj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+    "mongodb+srv://kimanihezekiah:Kimani_4802@cluster0.w7vjsqj.mongodb.net/?retryWrites=true&w=majority&appName"
+    "=Cluster0")
 client_kil = MongoClient(uri_kil, server_api=ServerApi('1'))
 database_kil = client_kil["Kil"]
 collection_names_kil = database_kil.list_collection_names()
 
 
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), nullable=False, unique=True)
-    password = db.Column(db.String(20), unique=True, nullable=False)
+def login_required(route):
+    @functools.wraps(route)
+    def wrapped_route(*args, **kwargs):
+        email = session.get('email')
+        if not email or not users_collection.find_one({"email": email}):
+            return redirect(url_for("login"))
+        return route(*args, **kwargs)
+    return wrapped_route
 
 
 def get_products(database, collection_name, limit=500):
@@ -273,6 +285,7 @@ def scrape_product_from_kilimall(link):
 
 @app.route("/")
 @app.route("/home", methods=["GET", "POST"])
+@login_required
 def home():
     if request.method == "GET":
         search = request.args.get("searchProduct")
@@ -282,7 +295,7 @@ def home():
             return render_template("search_results.html", products=search_results, search_term=search)
         else:
             pass
-    return render_template("home.html")
+    return render_template("home.html", email=session.get("name"))
 
 
 @app.route("/<category>", methods=["GET", "POST"])
@@ -296,7 +309,8 @@ def show_category(category):
     products = jumia_instance
     print(products)
 
-    return render_template("category.html", category=category.replace("-", " ").title(), products=products)
+    return render_template("category.html", category=category.replace("-", " ").title(),
+                           products=products, email=session.get("name"))
 
 
 @app.route("/product/<product_id>", methods=["GET", "POST"])
@@ -351,7 +365,8 @@ def product_page(product_id):
             # Handle add to cart or view product form submission here
             pass
 
-    return render_template("product_page.html", product=detailed_product, related_products=related_products)
+    return render_template("product_page.html", product=detailed_product,
+                           related_products=related_products, email=session.get("name"))
 
 
 @app.route("/jumia")
@@ -364,14 +379,51 @@ def show_kilimall():
     return render_template("home.html")
 
 
-
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    email = ""
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+        checkmail = users_collection.find_one({"email": email})
+        if checkmail:
+            try:
+                if pbkdf2_sha256.verify(password, checkmail["password"]):  # Correct password verification
+                    session["email"] = email
+                    session["name"] = checkmail["name"]
+                    return redirect(url_for("home"))
+                else:
+                    flash("Invalid email or password")
+                    return render_template("login.html", email=email)
+            except ValueError:
+                flash("Invalid email or password")
+                return render_template("login.html", email=email)
+        else:
+            flash("Invalid email or password")
+            return render_template("login.html", email=email)
+
+    return render_template("login.html", email=email)
 
 
-@app.route("/register")
+
+@app.route("/register", methods=["GET", "POST"])
 def register():
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        confirmpassword = request.form.get("confirmpassword")
+        if password != confirmpassword:
+            flash("Passwords do not match")
+            return redirect(url_for("register"), code=302)
+        else:
+            userdata = {"name": name, "email": email, "password": pbkdf2_sha256.hash(password)}
+            users_collection.insert_one(userdata)
+            session["email"] = email
+            session["name"] = name
+            flash("Registered Successfully", "success")
+
+            return redirect(url_for("home"))
     return render_template("register.html")
 
 
@@ -381,6 +433,5 @@ def utility_processor():
 
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
+
     app.run(debug=True)

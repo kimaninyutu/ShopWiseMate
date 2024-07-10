@@ -47,15 +47,18 @@
 
             </ul>
             <ul class="navbar-nav ml-auto">
+                {% if session.get('name') %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/blogs">Blogs</a>
+                    <a class="nav-link" href="#">Welcome, {{ session.get('name') }}</a>
                 </li>
+                {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="/login">Login</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/signup">Signup</a>
                 </li>
+                {% endif %}
             </ul>
         </div>
     </nav>
