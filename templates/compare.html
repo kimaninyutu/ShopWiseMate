@@ -1,44 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Compare Prices</title>
-</head>
-<body>
-    <h1>Compare Prices</h1>
+{% extends "base2.html" %}
 
-    {% if product1 %}
-        <div>
-            <h2>Cheapest in Jumia</h2>
-            <p>Name: {{ product1.name }}</p>
-            <p>Price: {{ product1.price }}</p>
-            <img src="{{ product1.image }}" alt="{{ product1.name }}">
+{% block title %}Compare Prices{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Compare Prices</h1>
+
+    <div class="row">
+        {% if product1 %}
+            <div class="col-md-6">
+                <div class="card {% if product1 == cheapest_product %}cheapest{% endif %}">
+                    <div class="card-body">
+                        <h2 class="card-title">Product from Jumia</h2>
+                        <p class="card-text">Name: {{ product1.name }}</p>
+                        <p class="card-text">Price: {{ product1.price }}</p>
+                        <img src="{{ product1.image }}" class="card-img-top" alt="{{ product1.name }}">
+                        <a href="{{ product1.link }}" class="btn btn-primary view-link" target="_blank">View on Jumia</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-md-6 text-center text-muted">
+                <p>No product found in Jumia.</p>
+            </div>
+        {% endif %}
+
+        {% if product2 %}
+            <div class="col-md-6">
+                <div class="card {% if product2 == cheapest_product %}cheapest{% endif %}">
+                    <div class="card-body">
+                        <h2 class="card-title">Product from Kilimall</h2>
+                        <p class="card-text">Name: {{ product2.name }}</p>
+                        <p class="card-text">Price: {{ product2.price }}</p>
+                        <img src="{{ product2.image }}" class="card-img-top" alt="{{ product2.name }}">
+                        <a href="{{ product2.link }}" class="btn btn-primary view-link" target="_blank">View on Kilimall</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-md-6 text-center text-muted">
+                <p>No product found in Kilimall.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if not product1 and not product2 %}
+        <div class="text-center text-danger">
+            <p>No products found for comparison.</p>
         </div>
-    {% else %}
-        <p>No product found in Jumia.</p>
     {% endif %}
+</div>
+{% endblock %}
 
-    {% if product2 %}
-        <div>
-            <h2>Cheapest in Kilimall</h2>
-            <p>Name: {{ product2.name }}</p>
-            <p>Price: {{ product2.price }}</p>
-            <img src="{{ product2.image }}" alt="{{ product2.name }}">
-        </div>
-    {% else %}
-        <p>No product found in Kilimall.</p>
-    {% endif %}
-
-    {% if product3 %}
-        <div>
-            <h2>Cheapest Overall</h2>
-            <p>Name: {{ product3.name }}</p>
-            <p>Price: {{ product3.price }}</p>
-            <img src="{{ product3.image }}" alt="{{ product3.name }}">
-        </div>
-    {% else %}
-        <p>No product found overall.</p>
-    {% endif %}
-</body>
-</html>
-
+{% block styles %}
+<style>
+    .cheapest {
+        border: 2px solid #ffc107; /* yellow color for highlighting */
+        box-shadow: 0 0 10px rgba(255, 193, 7, 0.5); /* glow effect */
+    }
+</style>
+{% endblock %}

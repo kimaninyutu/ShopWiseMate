@@ -1,7 +1,7 @@
 import functools
 import os
 import secrets
-import passlib
+
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
@@ -9,14 +9,10 @@ from bs4 import BeautifulSoup
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from bson.objectid import ObjectId  # Ensure this import for ObjectId
+from bson.objectid import ObjectId
 from dataset.product_comparison import Compare, cheapest_in_kilimal, cheapest_in_jumia, cheapest_of_all
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin
 from passlib.hash import pbkdf2_sha256
 
-
-#from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 
@@ -24,9 +20,10 @@ app.secret_key = secrets.token_urlsafe(32)
 config_class = 'config.DevelopmentConfig' if os.getenv('FLASK_ENV') == 'development' else 'config.ProductionConfig'
 app.config.from_object(config_class)
 
-users_uri = ("mongodb+srv://kimanihezekiah:Kimani_4802@cluster0.w7vjsqj.mongodb.net/?retryWrites=true&w=majority&appName"
+users_uri = (
+    "mongodb+srv://kimanihezekiah:Kimani_4802@cluster0.w7vjsqj.mongodb.net/?retryWrites=true&w=majority&appName"
     "=Cluster0")
-# Initialize the SQLAlchemy instance after the configuration
+
 users_db = MongoClient(users_uri, server_api=ServerApi("1"))
 users_database = users_db["users"]
 users_collection = users_database["users"]
@@ -38,7 +35,6 @@ uri_jumia = (
 client_jumia = MongoClient(uri_jumia, server_api=ServerApi('1'))
 database_jumia = client_jumia["Jumia"]
 collection_names_jumia = database_jumia.list_collection_names()
-
 
 # MongoDB connection for Kil
 uri_kil = (
@@ -56,6 +52,7 @@ def login_required(route):
         if not email or not users_collection.find_one({"email": email}):
             return redirect(url_for("login"))
         return route(*args, **kwargs)
+
     return wrapped_route
 
 
@@ -149,8 +146,8 @@ def get_product_by_id(database, product_id):
         collection = database[collection_name]
         product = collection.find_one({"_id": ObjectId(product_id)})  # Ensure ObjectId is used
         if product:
-            return product
-    return None
+            return product, collection
+    return None, None
 
 
 def get_related_products(category, source='Jumia', limit=5):
@@ -314,14 +311,18 @@ def show_category(category):
 
 
 @app.route("/product/<product_id>", methods=["GET", "POST"])
+@login_required
 def product_page(product_id):
-    product = get_product_by_id(database_jumia, product_id) or get_product_by_id(database_kil, product_id)
+    product, collection = get_product_by_id(database_jumia, product_id) or get_product_by_id(database_kil, product_id)
     if not product:
         return "Product not found", 404
 
     detailed_product = scrape_product_details(product['product_link'])
     if not detailed_product:
-        return "Could not retrieve product details", 500
+        # Delete the product from the database
+        result = collection.delete_one({"_id": ObjectId(product_id)})
+        flash("Could not retrieve product details. The product has been removed.", "danger")
+        return redirect(url_for("home"))
 
     related_products = get_related_products(product.get("category", ""))
 
@@ -344,22 +345,27 @@ def product_page(product_id):
             else:
                 kilimal = None
 
-            if cheapest_of_all:
-                product3 = cheapest_of_all[0]
-                if cheapest_of_all is cheapest_in_jumia:
-                    cheapest = jumia
-                elif cheapest_of_all is cheapest_in_kilimal:
-                    cheapest = kilimal
-                else:
-                    cheapest = None
-            else:
-                cheapest = None
+            def extract_price(price_str):
+                """Helper function to convert price strings to float."""
+                return float(price_str.replace('KSh', '').replace(',', '').strip())
+
+            cheapest = None
+            if jumia and kilimal:
+                jumia_price = extract_price(jumia["price"])
+                kilimal_price = extract_price(kilimal["price"])
+                cheapest = jumia if jumia_price <= kilimal_price else kilimal
+            elif jumia:
+                cheapest = jumia
+            elif kilimal:
+                cheapest = kilimal
+
+            print(kilimal)
 
             return render_template(
                 "compare.html",
                 product1=jumia,
                 product2=kilimal,
-                product3=cheapest
+                cheapest_product=cheapest
             )
         else:
             # Handle add to cart or view product form submission here
@@ -367,16 +373,6 @@ def product_page(product_id):
 
     return render_template("product_page.html", product=detailed_product,
                            related_products=related_products, email=session.get("name"))
-
-
-@app.route("/jumia")
-def show_jumia():
-    return render_template("home.html")
-
-
-@app.route("/kilimall")
-def show_kilimall():
-    return render_template("home.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -403,7 +399,6 @@ def login():
             return render_template("login.html", email=email)
 
     return render_template("login.html", email=email)
-
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -433,5 +428,4 @@ def utility_processor():
 
 
 if __name__ == "__main__":
-
     app.run(debug=True)
