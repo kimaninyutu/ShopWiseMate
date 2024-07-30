@@ -2,6 +2,7 @@ import functools
 import os
 import secrets
 
+import bson
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
@@ -60,7 +61,6 @@ def get_products(database, collection_name, limit=500):
     products = []
     collection = database[collection_name]
     print(f"Retrieving documents from collection: {collection_name}")
-
     documents = collection.find({}, {
         "name": 1,
         "product_link": 1,
@@ -142,9 +142,14 @@ def search_products(search_term):
 
 
 def get_product_by_id(database, product_id):
+    try:
+        object_id = ObjectId(product_id)
+    except bson.errors.InvalidId:
+        return None, None
+
     for collection_name in database.list_collection_names():
         collection = database[collection_name]
-        product = collection.find_one({"_id": ObjectId(product_id)})  # Ensure ObjectId is used
+        product = collection.find_one({"_id": object_id})  # Ensure ObjectId is used
         if product:
             return product, collection
     return None, None
@@ -224,6 +229,10 @@ def scrape_product_details(product_link):
 
 
 def scrape_product_from_kilimall(link):
+    if not link.startswith("http://") and not link.startswith("https://"):
+        print(f"Invalid URL: {link}")
+        return None
+
     session = requests.Session()
     retry = Retry(
         total=5,
@@ -249,7 +258,7 @@ def scrape_product_from_kilimall(link):
 
         name_elem = soup.select_one("div.product-title")
         description_elem = soup.select_one("div.specification-card")
-        images = soup.select("div.details")
+        images = soup.select("div.details img")
         image = [img.get("src") for img in images]
 
         rating_elem = soup.find("div", class_="van-rate")
@@ -280,6 +289,7 @@ def scrape_product_from_kilimall(link):
         return None
 
 
+
 @app.route("/")
 @app.route("/home", methods=["GET", "POST"])
 @login_required
@@ -298,14 +308,11 @@ def home():
 @app.route("/<category>", methods=["GET", "POST"])
 def show_category(category):
     if category not in valid_collections:
-        return "Category not found", 404
+        return redirect(url_for("home")), 404
 
     collection_name = valid_collections[category]
-
     jumia_instance = get_products(database_jumia, category)
     products = jumia_instance
-    print(products)
-
     return render_template("category.html", category=category.replace("-", " ").title(),
                            products=products, email=session.get("name"))
 
@@ -313,7 +320,14 @@ def show_category(category):
 @app.route("/product/<product_id>", methods=["GET", "POST"])
 @login_required
 def product_page(product_id):
-    product, collection = get_product_by_id(database_jumia, product_id) or get_product_by_id(database_kil, product_id)
+    if not product_id:
+        return "Product ID is missing", 400
+
+    try:
+        product, collection = get_product_by_id(database_jumia, product_id) or get_product_by_id(database_kil, product_id)
+    except bson.errors.InvalidId:
+        return "Invalid product ID format", 400
+
     if not product:
         return "Product not found", 404
 
@@ -341,7 +355,15 @@ def product_page(product_id):
 
             if cheapest_in_kilimal:
                 product2 = cheapest_in_kilimal[0]
+                print(product2)
                 kilimal = scrape_product_from_kilimall(product2["link"])
+                print("LINKKKKKKKKKKKKKKKKKKKKKKKK")
+                print(product2["link"])
+                #test = product2
+                # Ensure kilimal is not None before assigning
+                #kilimal["image"] = test["image"]
+                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                print(kilimal)
             else:
                 kilimal = None
 
@@ -359,7 +381,9 @@ def product_page(product_id):
             elif kilimal:
                 cheapest = kilimal
 
-            print(kilimal)
+            print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            print(cheapest)
+            print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
             return render_template(
                 "compare.html",

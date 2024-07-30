@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="text-center">Compare Prices</h1>
+    <h1 class="text-center">Different Prices for {{ product1.name }}</h1>
 
     <div class="row">
         {% if product1 %}
@@ -16,6 +16,9 @@
                         <p class="card-text">Price: {{ product1.price }}</p>
                         <img src="{{ product1.image }}" class="card-img-top" alt="{{ product1.name }}">
                         <a href="{{ product1.link }}" class="btn btn-primary view-link" target="_blank">View on Jumia</a>
+                        {% if product1 == cheapest_product %}
+                            <div class="cheapest-banner">Cheapest</div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -34,6 +37,9 @@
                         <p class="card-text">Price: {{ product2.price }}</p>
                         <img src="{{ product2.image }}" class="card-img-top" alt="{{ product2.name }}">
                         <a href="{{ product2.link }}" class="btn btn-primary view-link" target="_blank">View on Kilimall</a>
+                        {% if product2 == cheapest_product %}
+                            <div class="cheapest-banner">Cheapest</div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -54,9 +60,42 @@
 
 {% block styles %}
 <style>
+    .card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
     .cheapest {
-        border: 2px solid #ffc107; /* yellow color for highlighting */
-        box-shadow: 0 0 10px rgba(255, 193, 7, 0.5); /* glow effect */
+        border: 2px solid #28a745; /* green color for highlighting */
+        box-shadow: 0 0 10px rgba(40, 167, 69, 0.5); /* glow effect */
+        position: relative;
+    }
+
+    .cheapest-banner {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 0 0 5px 5px;
+        animation: blink 1s infinite;
+        font-weight: bold;
+    }
+
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    .card-body img {
+        max-height: 200px;
+        object-fit: cover;
+        margin-bottom: 10px;
     }
 </style>
 {% endblock %}
