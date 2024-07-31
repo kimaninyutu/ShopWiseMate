@@ -1,6 +1,7 @@
 import functools
 import os
 import secrets
+import datetime
 
 import bson
 from flask import Flask, render_template, request, redirect, url_for, session, flash
@@ -81,13 +82,9 @@ valid_collections = {
     "phoneTablets": "PHONE_TABLETS",
     "electronics": "ELECTRONICS",
     "appliances": "APPLIANCES",
-    "health-beauty": "HEALTH_BEAUTY",
-    "home-office": "HOME_OFFICE",
-    "fashion": "FASHION",
     "computing": "COMPUTING",
     "supermarket": "SUPERMARKET",
     "babyproducts": "BABY_PRODUCTS",
-    "sportinggoods": "sporting-goods",
     "automobile": "AUTOMOBILE",
     "gaming": "GAMING",
     "gardenoutdoor": "GARDEN_OUTDOOR",
@@ -98,8 +95,6 @@ valid_collections = {
     "musicalintruments": "MUSICAL_INSTRUMENTS",
     "petsupplies": "PET_SUPPLIES",
     "services": "SERVICES",
-    "toys_games": "TOYS_GAMES",
-    "other": "OTHER"
 }
 
 
@@ -213,7 +208,7 @@ def scrape_product_details(product_link):
 
         product_data = {
             "name": name,
-            "product_link": product_link,
+            "link": product_link,
             "price": new_price if new_price else "N/A",
             "old_price": old_price,
             "rating": rating,
@@ -289,7 +284,6 @@ def scrape_product_from_kilimall(link):
         return None
 
 
-
 @app.route("/")
 @app.route("/home", methods=["GET", "POST"])
 @login_required
@@ -297,6 +291,13 @@ def home():
     if request.method == "GET":
         search = request.args.get("searchProduct")
         if search:
+            # Save search history
+            email = session.get("email")
+            users_collection.update_one(
+                {"email": email},
+                {"$push": {"search_history": {"search_term": search, "timestamp": datetime.datetime.now()}}}
+            )
+
             print(search)
             search_results = search_products(search)
             return render_template("search_results.html", products=search_results, search_term=search)
@@ -346,32 +347,33 @@ def product_page(product_id):
             compare = Compare(product_name)
             compare.compare(product_name)
 
-            # Ensure the lists are not empty
-            if cheapest_in_jumia:
-                product1 = cheapest_in_jumia[0]
-                jumia = scrape_product_details(product1["link"])
-            else:
-                jumia = None
-
-            if cheapest_in_kilimal:
-                product2 = cheapest_in_kilimal[0]
-                print(product2)
-                kilimal = scrape_product_from_kilimall(product2["link"])
-                print("LINKKKKKKKKKKKKKKKKKKKKKKKK")
-                print(product2["link"])
-                #test = product2
-                # Ensure kilimal is not None before assigning
-                #kilimal["image"] = test["image"]
-                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-                print(kilimal)
-            else:
-                kilimal = None
-
             def extract_price(price_str):
                 """Helper function to convert price strings to float."""
-                return float(price_str.replace('KSh', '').replace(',', '').strip())
+                if isinstance(price_str, str):
+                    return float(price_str.replace('KSh', '').replace(',', '').strip())
+                elif isinstance(price_str, float):
+                    return price_str
+                else:
+                    raise ValueError(f"Unexpected price format: {price_str}")
 
             cheapest = None
+            jumia = None
+            kilimal = None
+
+            try:
+                if cheapest_in_jumia:
+                    product1 = cheapest_in_jumia[0]
+                    jumia = scrape_product_details(product1["link"])
+            except Exception as e:
+                flash(f"Error retrieving product from Jumia: {str(e)}", "danger")
+
+            try:
+                if cheapest_in_kilimal:
+                    product2 = cheapest_in_kilimal[0]
+                    kilimal = product2
+            except Exception as e:
+                flash(f"Error retrieving product from Kilimall: {str(e)}", "danger")
+
             if jumia and kilimal:
                 jumia_price = extract_price(jumia["price"])
                 kilimal_price = extract_price(kilimal["price"])
@@ -381,9 +383,8 @@ def product_page(product_id):
             elif kilimal:
                 cheapest = kilimal
 
-            print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-            print(cheapest)
-            print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            if not cheapest:
+                flash("No products found in Jumia or Kilimall", "warning")
 
             return render_template(
                 "compare.html",
@@ -397,7 +398,6 @@ def product_page(product_id):
 
     return render_template("product_page.html", product=detailed_product,
                            related_products=related_products, email=session.get("name"))
-
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -444,6 +444,65 @@ def register():
 
             return redirect(url_for("home"))
     return render_template("register.html")
+
+
+@app.route("/profile", methods=["GET", "POST"])
+@login_required
+def profile():
+    email = session.get("email")
+    user = users_collection.find_one({"email": email})
+
+    if request.method == "POST":
+        # Update profile details
+        name = request.form.get("name")
+        if name:
+            users_collection.update_one({"email": email}, {"$set": {"name": name}})
+            session["name"] = name
+            flash("Profile updated successfully.", "success")
+        return redirect(url_for("profile"))
+
+    return render_template("profile.html", user=user)
+
+
+@app.route("/search_history")
+@login_required
+def search_history():
+    email = session.get("email")
+    user = users_collection.find_one({"email": email})
+    search_history = user.get("search_history", [])
+    return render_template("search_history.html", search_history=search_history)
+
+
+@app.route("/preferences", methods=["GET", "POST"])
+@login_required
+def preferences():
+    email = session.get("email")
+    user = users_collection.find_one({"email": email})
+
+    if request.method == "POST":
+        # Update preferences
+        preference = request.form.get("preference")
+        users_collection.update_one({"email": email}, {"$set": {"preferences": preference}})
+        flash("Preferences updated successfully.", "success")
+        return redirect(url_for("preferences"))
+
+    # Generate preferences from search history
+    search_history = user.get("search_history", [])
+    search_count = {}
+    for entry in search_history:
+        search_term = entry.get("search_term")
+        if search_term:
+            search_count[search_term] = search_count.get(search_term, 0) + 1
+
+    # Add frequently searched products to preferences
+    sorted_searches = sorted(search_count.items(), key=lambda x: x[1], reverse=True)
+    top_preferences = [search for search, count in sorted_searches if count > 1]
+
+    # Save top preferences
+    users_collection.update_one({"email": email}, {"$set": {"preferences": top_preferences}})
+
+    preferences = user.get("preferences", [])
+    return render_template("preferences.html", preferences=preferences)
 
 
 @app.context_processor

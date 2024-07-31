@@ -1,0 +1,22 @@
+{% extends "base2.html" %}
+
+{% block title %}Profile - ShopWiseMate{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Profile Page</h1>
+    <form method="POST" action="{{ url_for('profile') }}">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" class="form-control" value="{{ user['name'] }}">
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" value="{{ user['email'] }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </form>
+    <a href="{{ url_for('search_history') }}" class="btn btn-secondary mt-3">View Search History</a>
+    <a href="{{ url_for('preferences') }}" class="btn btn-secondary mt-3">Preferences</a>
+</div>
+{% endblock %}

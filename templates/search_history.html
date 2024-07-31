@@ -1,0 +1,18 @@
+{% extends "base2.html" %}
+
+{% block title %}Search History - ShopWiseMate{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Search History</h1>
+    <ul class="list-group">
+        {% for entry in search_history %}
+            <li class="list-group-item">
+                <strong>Search Term:</strong> {{ entry.search_term }} <br>
+                <strong>Date:</strong> {{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('home') }}" class="btn btn-primary mt-3">Back to Home</a>
+</div>
+{% endblock %}

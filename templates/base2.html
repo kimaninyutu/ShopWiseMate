@@ -23,9 +23,6 @@
                             <a class="dropdown-item" href="/phoneTablets">Phones & Tablets</a>
                             <a class="dropdown-item" href="/electronics">Electronics</a>
                             <a class="dropdown-item" href="/appliances">Home & Office Appliances</a>
-                            <a class="dropdown-item" href="/health_beauty">Health & Beauty</a>
-                            <a class="dropdown-item" href="/home_office">Home Office</a>
-                            <a class="dropdown-item" href="/fashion">Fashion</a>
                             <a class="dropdown-item" href="/computing">Computing</a>
                             <a class="dropdown-item" href="/supermarket">Supermarket</a>
                             <a class="dropdown-item" href="/babyproducts">Baby Products</a>
@@ -40,7 +37,6 @@
                             <a class="dropdown-item" href="/musicalintruments">Musical Instruments</a>
                             <a class="dropdown-item" href="/petsupplies">Pet Supplies</a>
                             <a class="dropdown-item" href="/services">Services</a>
-                            <a class="dropdown-item" href="/toys_games">Toys & Games</a>
                         </div>
                     </li>
                 </ul>
@@ -73,26 +69,29 @@
         </div>
 
         <ul class="navbar-nav ml-auto">
-                {% if session.get('name') %}
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Welcome, {{ session.get('name') }}</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/signup">Signup</a>
-                </li>
-                {% endif %}
-            </ul>
+            {% if session.get('name') %}
+            <li class="nav-item">
+                <a class="nav-link" href="#">Welcome, {{ session.get('name') }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/signup">Signup</a>
+            </li>
+            {% endif %}
+        </ul>
 
         <input type="hidden" id="mogl_token" value="">
         <input type="hidden" id="mogl_email" value="">
         <input type="hidden" id="mogl_id" value="">
     </header>
+
     {% block content %}{% endblock %}
-    <!-- Search Overlay -->
 
     <footer class="footer">
         <div class="shell">

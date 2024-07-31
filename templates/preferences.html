@@ -1,0 +1,23 @@
+{% extends "base2.html" %}
+
+{% block title %}Preferences - ShopWiseMate{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Preferences</h1>
+    <form method="POST" action="{{ url_for('preferences') }}">
+        <div class="form-group">
+            <label for="preference">Add or Update Preference:</label>
+            <input type="text" id="preference" name="preference" class="form-control" value="{{ preferences|join(', ') }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Update Preferences</button>
+    </form>
+    <h3 class="mt-4">Frequently Searched Products</h3>
+    <ul class="list-group">
+        {% for pref in preferences %}
+            <li class="list-group-item">{{ pref }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('home') }}" class="btn btn-primary mt-3">Back to Home</a>
+</div>
+{% endblock %}
